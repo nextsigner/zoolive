@@ -28,7 +28,7 @@ ApplicationWindow {
     color: 'black'
     flags: Qt.FramelessWindowHint
     //property alias app: r
-    property bool appRotated: Qt.platform.os==='android'?Screen.width>Screen.height:false
+    property bool appRotated: false//Qt.platform.os==='android'?Screen.width>Screen.height:false
     //property var zoolMap
     property bool dev: false
     property int fs: Qt.platform.os==='android'?Screen.width*0.05:app.width*0.05
@@ -130,10 +130,11 @@ ApplicationWindow {
                 fs:Qt.platform.os==='android'?(!app.appRotated?app.fs:app.fs*0.5):app.fs
                 border.width: 0
                 border.color: 'blue'
+                parent: xZoolandMap
                 //parent: xApp
                 //parent: app.appRotated?xApp:xZoolandMap
                 anchors.centerIn: parent
-                anchors.verticalCenterOffset: 0-(timeline.y*0.5)
+                //anchors.verticalCenterOffset: 0-(timeline.y*0.5)
                 //anchors.horizontalCenter: parent.horizontalCenter
                 //z: parent.z-1
                 Rectangle{
@@ -199,7 +200,7 @@ ApplicationWindow {
             ZmMoveTime{
                 id: zmt
                 anchors.bottom: parent.bottom
-                anchors.bottomMargin: 0+(timeline.y)//+app.fs*0.5
+                //anchors.bottomMargin: 0+(timeline.y)//+app.fs*0.5
                 /*onGmtChanged:{
                     if(!app.currentJson)return
                     if(onlySetDate){
@@ -375,7 +376,7 @@ ApplicationWindow {
                 spacing: app.fs*2
                 width: parent.width
                 anchors.horizontalCenter: parent.horizontalCenter
-                visible: false//!app.appRotated
+                //visible: false//!app.appRotated
                 Rectangle{
                     id: xTop
                     width: xApp.width
@@ -564,7 +565,8 @@ ApplicationWindow {
                     id: rowBtns
                     spacing: app.fs*0.5
                     anchors.horizontalCenter: parent.horizontalCenter
-                    parent: zoolMap//zoolMap.parent===xZoolandMap?col:zoolMap.xToolsTop
+                    parent: xZoolandMap
+                    //parent: zoolMap//zoolMap.parent===xZoolandMap?col:zoolMap.xToolsTop
                     //Calcular Numerología
                     ZmButton{
                         text: '\uf1ec'
@@ -898,7 +900,7 @@ ApplicationWindow {
                 txt.text+=getList()
             }
         }*/
-        Form{id: form}
+        Form{id: form; visible: true}
         ZoolandNumCalc{
             id: znc
             height: xApp.height
@@ -951,28 +953,40 @@ ApplicationWindow {
     }
 
     Component.onCompleted: {
-        app.modo='trans'
-        var jsonTestData = JSON.parse(u.getFile('./jsons/trans_pluton.json'))
+        let p={}
+        p.n='Ricardo'
+        p.d=20
+        p.m=6
+        p.a=1975
+        p.h=23
+        p.min=4
+        p.lat=-35.4752134
+        p.lon=-69.585934
+        p.alt=144
+        p.gmt=-3
+        p.c='Malargue Mendoza'
+        p.hsys='T'
+        p.t='vn'
+        //loadZmFromParams(p)
+        //return
+        //app.modo='trans'
+        //var jsonTestData = JSON.parse(u.getFile('./jsons/trans_pluton.json'))
         // Convertimos el array de objetos a string JSON para simular el comportamiento real
-        var jsonString = JSON.stringify(jsonTestData);
+        //var jsonString = JSON.stringify(jsonTestData);
         //Cargamos los datos en el componente
 
 
 
-        return
+        //return
         //CODIGO INACTIVO
 
         //u.checkPermissions()
-        if(u.folderExist('/home/ns'))app.dev=true
+        //if(u.folderExist('/home/ns'))app.dev=true
         let s=''
         let appDataPath
-        if(Qt.platform.os==='android'){
-            appDataPath=u.getAndroidPublicDocumentsPath()
-        }else{
-            appDataPath=u.getPath(3)+'/Zool'
-            if(!u.folderExist(appDataPath)){
-                u.mkdir(appDataPath)
-            }
+        appDataPath=u.getPath(3)+'/Zool'
+        if(!u.folderExist(appDataPath)){
+            u.mkdir(appDataPath)
         }
         app.currentFilesFolder=appDataPath
         let filePath=appDataPath+"/jsons/Ricardo.json"

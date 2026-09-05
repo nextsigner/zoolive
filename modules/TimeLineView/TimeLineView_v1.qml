@@ -350,6 +350,7 @@ Rectangle {
     function pad(n) {
         return n < 10 ? "0" + n : n;
     }
+
     function loadZm(a, m, d, h, min, gmt, lat, lon, alt, hsys){
         let s=''
         let date=new Date(a, m-1, d, h, min)
@@ -370,4 +371,5 @@ Rectangle {
         zmt.targetDate=date
 
     }
+
 }

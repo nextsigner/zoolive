@@ -143,7 +143,7 @@ Rectangle {
         anchors.left: parent.left
         anchors.leftMargin: !app.appRotated?0:0-((xApp.width-r.width)*0.5)
         anchors.top: parent.top
-        anchors.topMargin: 0+(timeline.y*0.5)
+        //anchors.topMargin: 0+(timeline.y*0.5)
         visible: r.currentIndexBodie>-1 && r.currentIndexSign>-1 && r.currentIndexHouse>-1
         MouseArea {
             anchors.fill: parent
@@ -178,7 +178,7 @@ Rectangle {
         anchors.right: parent.right
         anchors.rightMargin: !app.appRotated?0:0-((xApp.width-r.width)*0.5)
         anchors.top: parent.top
-        anchors.topMargin: 0+(timeline.y*0.5)
+        //anchors.topMargin: 0+(timeline.y*0.5)
         visible: r.currentIndexBodieExt>-1 && r.currentIndexSignExt>-1 && r.currentIndexHouseExt>-1
         MouseArea {
             anchors.fill: parent
