@@ -9,7 +9,7 @@ import unik.Unik 1.0
 import Qt.labs.settings 1.0
 
 import ZoolandMap 3.0
-import ZmMoveTime 1.0
+import ZmMoveTime 2.0
 import ZoolElementsView 1.0
 import ZoolandNumCalc 1.0
 import ZmButton 1.0
@@ -19,8 +19,8 @@ import TimeLineView 1.0
 
 ApplicationWindow {
     id: app
-    width: 1280/2//Qt.platform.os==='android'?Screen.width:608
-    height: 720//Qt.platform.os==='android'?Screen.height:Screen.height
+    width: 608//Qt.platform.os==='android'?Screen.width:608
+    height: 1080//Qt.platform.os==='android'?Screen.height:Screen.height
     x: 0
     visible: true
     visibility: Qt.platform.os==='android'?'FullScreen':'Windowed'
@@ -420,146 +420,7 @@ ApplicationWindow {
                                 anchors.verticalCenter: parent.verticalCenter
                             }
                         }
-                        Row{
-                            spacing: app.fs*0.5
-                            anchors.horizontalCenter: parent.horizontalCenter
-                            //Cargar Tránsitos en INT
-                            ZmButton{
-                                text: '\uf0e7'
-                                width: app.fs*2
-                                fs: app.fs*1.5
-                                anchors.verticalCenter: parent.verticalCenter
-                                //visible: app.uFilePathLoaded==='' || app.uFilePathLoaded.indexOf('Ahora ')===0
-                                onClicked: {
-                                    cbArchivos.currentIndex=0
-                                    xSelectRs.visible=false
-                                    let s=''
-                                    let d=new Date(Date.now())
-                                    let va=d.getFullYear()
-                                    let vm=d.getMonth()+1
-                                    let vd=d.getDate()
-                                    let vh=d.getHours()
-                                    let vmin=d.getMinutes()
-                                    let jf=getSweJson('trans', va, vm, vd, vh, vmin, 0, 0.0, 0.0, 0, 'T')
-                                    app.currentJson=jf
-                                    app.modo='trans'
-                                    app.uFilePathLoaded='Ahora '+vd+'/'+vm+'/'+va+' '+vh+':'+vmin
-                                    s +=app.uFilePathLoaded+'\nTránsitos planetarios global/mundial.\n\n'
-                                    s += getList(jf)
-                                    txt.text = s
-                                    zmt.onlySetDate=true
-                                    zmt.targetDate=d
-                                    //getList(j)
-
-                                }
-                            }
-                            //Guardar
-                            ZmButton{
-                                text: '\uf0c7'
-                                width: app.fs*2
-                                fs: app.fs*1.5
-                                anchors.verticalCenter: parent.verticalCenter
-                                opacity: app.isSaved?0.25:1.0
-                                visible: app.uFilePathLoaded!==''
-                                onClicked: {
-                                    //txt.text='app.isSaved: '+app.isSaved+'\n'
-                                    if(app.isSaved)return
-                                    /*let fd=JSON.stringify(app.currentJson.params, null, 2)
-                                    //txt.text='fd: '+fd+'\n'
-                                    let s=''
-                                    s+='Guardando:\n'
-                                    s+=''+app.uFilePathLoaded+'\n'
-                                    s+=fd
-                                    txt.text=s*/
-                                    //if(app.currentJson.params.t==='vn'){
-                                    if(app.modo==='vn'){
-                                        let j={}
-                                        j.params=app.currentJson.params
-                                        u.setFile(app.uFilePathLoaded, JSON.stringify(j, null, 2))
-                                        app.isSaved=true
-                                        return
-                                    }
-                                    form.loadForEditFromParams(app.currentJson.params)
-                                    xSelectRs.visible=false
-                                    zoolMap.xToolsTop.parent.visible=false
-                                }
-                            }
-                            //Crear nuevo
-                            ZmButton{
-                                text: '\uf016'
-                                width: app.fs*2
-                                fs: app.fs*1.5
-                                anchors.verticalCenter: parent.verticalCenter
-                                onClicked: {
-                                    xSelectRs.visible=false
-                                    form.visible=true
-                                    zoolMap.xToolsTop.parent.visible=false
-                                }
-                            }
-                            //Editar
-                            ZmButton{
-                                text: '\uf044'
-                                width: app.fs*2
-                                fs: app.fs*1.5
-                                anchors.verticalCenter: parent.verticalCenter
-                                visible: app.uFilePathLoaded!==''
-                                onClicked: {
-                                    form.loadForEdit(app.uFilePathLoaded)
-                                    xSelectRs.visible=false
-                                    zoolMap.xToolsTop.parent.visible=false
-                                }
-                            }
-                            //Eliminar
-                            ZmButton{
-                                text: '\uf1f8'
-                                width: app.fs*2
-                                fs: app.fs*1.5
-                                anchors.verticalCenter: parent.verticalCenter
-                                visible: app.uFilePathLoaded!==''
-                                onClicked: {
-                                    let c='import ZmDialogConfirm 1.0\n'
-                                    c+='ZmDialogConfirm{}\n'
-                                    let obj=Qt.createQmlObject(c, xApp, 'zmDialogConfirm-code')
-                                    obj.obj=objDeleteFile
-                                    obj.tit='Confirmar Eliminación'
-                                    obj.cons='Desea eliminar el archivo\n['+app.uFilePathLoaded+']?'
-                                    obj.obj.args.push(app.uFilePathLoaded)
-                                    xSelectRs.visible=false
-                                    zoolMap.xToolsTop.parent.visible=false
-                                }
-                            }
                         }
-                        Row{
-                            spacing: app.fs*0.5
-                            anchors.horizontalCenter: parent.horizontalCenter
-                            Text{
-                                id: tit1
-                                text: 'Archivo:'
-                                color: 'white'
-                                anchors.verticalCenter: parent.verticalCenter
-                            }
-                            ZmComboBox {
-                                id: cbArchivos
-                                width: xApp.width - tit1.contentWidth - app.fs * 2
-                                height: app.fs * 2
-                                currentIndex: 0
-                                onCurrentIndexChanged: {
-                                    if (currentIndex < 0 || !model) return;
-
-                                    let rutaCompleta = model[currentIndex]
-                                    let nombreLimpio = rutaCompleta.split('/').pop().replace(/_/g, ' ').replace('.json', '')
-
-                                    let fd=u.getFile(rutaCompleta)
-                                    let p=JSON.parse(fd).params
-                                    app.modo=p.t
-                                    loadZmFromParams(p)
-                                    app.uFilePathLoaded=rutaCompleta
-                                    app.isSaved=true
-                                    printData(app.currentJson)
-
-                                }
-                            }                        }
-                    }
                 }
                 Row{
                     id: rowBtns
@@ -677,7 +538,7 @@ ApplicationWindow {
                     }
                     ZmComboBox {
                         id: cbAniosRS
-                        width: xApp.width - tit1.contentWidth - app.fs*2
+                        width: xApp.width// - tit1.contentWidth - app.fs*2
                         height: app.fs * 2
                         currentIndex: 0
                         onCurrentIndexChanged: {
@@ -841,24 +702,6 @@ ApplicationWindow {
                                 txt.text='zoolMap.posMaxExt: '+zoolMap.posMaxExt
                             }
                         }
-                        //Rotar Ventana en Windows
-                        ZmButton{
-                            text: 'Rotar Ventanta'
-                            //width: app.fs*2
-                            //fs: !app.appRotated?app.fs*1.5:app.fs*0.75
-                            visible: Qt.platform.os==='linux'
-                            onClicked:{
-                                if(app.width===350){
-                                    app.width=700
-                                    app.height=350
-                                    app.appRotated=true
-                                }else{
-                                    app.width=350
-                                    app.height=700
-                                    appRotated=false
-                                }
-                            }
-                        }
                         ZmButton{
                             text: 'Copiar Texto'
                             fs: app.fs
@@ -900,12 +743,14 @@ ApplicationWindow {
                 txt.text+=getList()
             }
         }*/
-        Form{id: form; visible: true}
+
         ZoolandNumCalc{
             id: znc
             height: xApp.height
             parent: zoolMap.parent===xZoolandMap?xApp:zoolMap
         }
+        Tools{id: tools}
+        Form{id: form}
         Rectangle{
             id: xNot
             width: app.fs*10
@@ -1004,8 +849,7 @@ ApplicationWindow {
 
         txt.text=s
         updateFileList()
-
-        //apps.aspLineWidth=2
+        loadNow()
     }
     Shortcut{
         sequence: 'Ctrl+Esc'
@@ -1017,6 +861,10 @@ ApplicationWindow {
     Shortcut{
         sequence: 'Esc'
         onActivated: {
+            if(tools.visible){
+                tools.visible=false
+                return
+            }
             Qt.quit()
         }
     }
@@ -1038,6 +886,10 @@ ApplicationWindow {
         sequence: 'Right'
         onActivated: timeline.next()
     }
+    Shortcut{
+        sequence: 'Ctrl+t'
+        onActivated: tools.visible=!tools.visible
+    }
     function updateFileList(){
         //let appDataPath=u.getPath(4)
         let folder=app.currentFilesFolder//u.getPath(3)+'/Zool'
@@ -1052,7 +904,7 @@ ApplicationWindow {
         for(var i=0;i<lista.length;i++){
             a.push(lista[i])
         }
-        cbArchivos.model=a
+        tools.cbArchivos.model=a
     }
     function getSweJson(t, a, m, d, h, min, gmt, lat, lon, alt, hsys){
         if(Qt.platform.os==='linux'){
@@ -1316,5 +1168,25 @@ ApplicationWindow {
         s+='\nTe en cuenta si hay algún cuerpo astrológico cerca o encima de alguna de las cúspides de las casas para interpretarlo correctamente con mayor precisión.\n'
         s+='Responde de forma puramente narrativa y con lenguaje fluido. Estoy trabajando con manos libres y escucharé tu respuesta por el auricular, así que evita por completo las listas, tablas, asteriscos o códigos. Organiza la información en párrafos continuos que sean fáciles de seguir auditivamente mientras realizo otras tareas. Debes estar atento a que yo pueda realizar consultas por medio tambien de audio por el micrófono. No cominences con la lectura hasta que yo no te haga mensión de que ya te estoy escuchando. Para avisarte te diré -te escucho-, -comineza- o algo similaapp.'
         return s
+    }
+
+    function loadNow(){
+        let s=''
+        let d=new Date(Date.now())
+        let va=d.getFullYear()
+        let vm=d.getMonth()+1
+        let vd=d.getDate()
+        let vh=d.getHours()
+        let vmin=d.getMinutes()
+        let jf=getSweJson('trans', va, vm, vd, vh, vmin, 0, 0.0, 0.0, 0, 'T')
+        app.currentJson=jf
+        app.modo='trans'
+        app.uFilePathLoaded='Ahora '+vd+'/'+vm+'/'+va+' '+vh+':'+vmin
+        s +=app.uFilePathLoaded+'\nTránsitos planetarios global/mundial.\n\n'
+        s += getList(jf)
+        txt.text = s
+        zmt.onlySetDate=true
+        zmt.targetDate=d
+        tools.visible=false
     }
 }

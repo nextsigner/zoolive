@@ -81,6 +81,7 @@ Rectangle{
             ZmButton{
                 id: botPrint
                 text: 'Calcular'
+                fs:app.fs*0.5
                 onClicked:{
                     printNumMision()
                 }

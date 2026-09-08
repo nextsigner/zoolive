@@ -20,6 +20,7 @@ Rectangle{
         text: '?'
         color: apps.backgroundColor
         font.family: fontAwosome.name
+        font.pixelSize: r.width*0.8
         anchors.centerIn: parent
     }
 }
