@@ -219,38 +219,15 @@ Rectangle {
     Column {
         id: colTools
         anchors.bottom: parent.bottom
-        anchors.bottomMargin: app.fs*0.5
+        anchors.bottomMargin: app.fs*0.25
         anchors.left: parent.left
-        anchors.leftMargin: !app.appRotated?0:0-((xApp.width-r.width)*0.5)
+        anchors.leftMargin: app.fs*0.25
         visible: false
         Timer {
             running: parent.visible
             interval: 5000
             onTriggered: parent.visible=false
-        }
-        ZmButton {
-            text: '\uf07d'
-            fs: !app.appRotated?app.fs*0.75:app.fs*0.35
-            width:!app.appRotated?app.fs*1.5:app.fs*0.75
-            isCuad: true
-            onClicked: {
-                if(zoolMap.parent===xApp){
-                    zoolMap.parent=xZoolandMap
-                }else{
-                    zoolMap.parent=xApp
-                }
-            }
-        }
-        ZmButton {
-            text: 'G'
-            fs: !app.appRotated?app.fs*0.75:app.fs*0.35
-            width:!app.appRotated?app.fs*1.5:app.fs*0.75
-            isCuad: true
-            opacity: zoolMap.showGlifo?0.5:1.0
-            onClicked: {
-                zoolMap.showGlifo=!zoolMap.showGlifo
-            }
-        }
+        }        
         ZmButton {
             text: 'A'
             fs: !app.appRotated?app.fs*0.75:app.fs*0.35
@@ -271,7 +248,7 @@ Rectangle {
                 xZEV.visible=!xZEV.visible
             }
         }
-        ZmButton {
+        /*ZmButton {
             text: '\uf017'
             fs: !app.appRotated?app.fs*0.75:app.fs*0.35
             width:!app.appRotated?app.fs*1.5:app.fs*0.75
@@ -280,7 +257,7 @@ Rectangle {
             onClicked: {
                 zmt.visible=!zmt.visible
             }
-        }
+        }*/
     }
 
     function resetView() {

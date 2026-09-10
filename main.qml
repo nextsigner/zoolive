@@ -59,7 +59,10 @@ ApplicationWindow {
         property color fontColor: 'white'
         property color backgroundColor: 'black'
         property bool showZoolandMap: false
+
         property bool showAllDegreeData: false
+
+        property int userGmt: -3
 
         property int aspLineWidth: 2
 
@@ -158,9 +161,11 @@ ApplicationWindow {
                     color: apps.fontColor
                     opacity: 0.25
                     radius: width*0.2
+                    anchors.left: parent.left
+                    anchors.leftMargin: app.fs*0.25
                     anchors.bottom: parent.bottom
-                    anchors.bottomMargin: app.fs
-                    //visible: !zoolMap.colTools.visible
+                    anchors.bottomMargin: app.fs*0.25
+                    visible: !zoolMap.colTools.visible
                     MouseArea{
                         anchors.fill: parent
                         hoverEnabled: true
@@ -705,7 +710,6 @@ ApplicationWindow {
     }
     Shortcut{
         sequence: 'Ctrl+Esc'
-        //sequence: 'Esc'
         onActivated: {
             Qt.quit()
         }
@@ -715,6 +719,10 @@ ApplicationWindow {
         onActivated: {
             if(tools.visible){
                 tools.visible=false
+                return
+            }
+            if(xZEV.visible){
+                xZEV.visible=false
                 return
             }
             Qt.quit()
@@ -741,6 +749,18 @@ ApplicationWindow {
     Shortcut{
         sequence: 'Ctrl+t'
         onActivated: tools.visible=!tools.visible
+    }
+    Shortcut{
+        sequence: 'd'
+        onActivated: {
+            tools.cbArchivos.currentIndex=2
+        }
+    }
+    Shortcut{
+        sequence: 'e'
+        onActivated: {
+            xZEV.visible=!xZEV.visible
+        }
     }
     function updateFileList(){
         //let appDataPath=u.getPath(4)
@@ -1030,7 +1050,7 @@ ApplicationWindow {
         let vd=d.getDate()
         let vh=d.getHours()
         let vmin=d.getMinutes()
-        let jf=getSweJson('trans', va, vm, vd, vh, vmin, 0, 0.0, 0.0, 0, 'T')
+        let jf=getSweJson('trans', va, vm, vd, vh, vmin, apps.userGmt, 0.0, 0.0, 0, 'T')
         app.currentJson=jf
         app.modo='trans'
         app.uFilePathLoaded='Ahora '+vd+'/'+vm+'/'+va+' '+vh+':'+vmin

@@ -63,7 +63,7 @@ Rectangle{
                     let vd=d.getDate()
                     let vh=d.getHours()
                     let vmin=d.getMinutes()
-                    let jf=getSweJson('trans', va, vm, vd, vh, vmin, 0, 0.0, 0.0, 0, 'T')
+                    let jf=getSweJson('trans', va, vm, vd, vh, vmin, apps.userGmt, 0.0, 0.0, 0, 'T')
                     app.currentJson=jf
                     app.modo='trans'
                     app.uFilePathLoaded='Ahora '+vd+'/'+vm+'/'+va+' '+vh+':'+vmin
@@ -72,6 +72,7 @@ Rectangle{
                     txt.text = s
                     zmt.onlySetDate=true
                     zmt.targetDate=d
+                    zmt.isExt=false
                     //getList(j)
 
                 }
@@ -188,7 +189,7 @@ Rectangle{
                     xZEV.visible=!xZEV.visible
                 }
             }
-            //Cargar Tránsitos de ahora
+            //Cargar Tránsitos de ahora EXT
             ZmButton{
                 text: '\uf0e7'
                 width: app.fs*2
@@ -205,12 +206,13 @@ Rectangle{
                     let vd=d.getDate()
                     let vh=d.getHours()
                     let vmin=d.getMinutes()
-                    let jf=getSweJson('trans_ext', va, vm, vd, vh, vmin, 0, 0.0, 0.0, 0, 'T')
+                    let jf=getSweJson('trans_ext', va, vm, vd, vh, vmin, apps.userGmt, 0.0, 0.0, 0, 'T')
                     app.currentJsonExt=jf
                     app.modo='trans_ext'
                     zoolMap.zm.objBodiesCircleExt.load(jf)
                     zmt.onlySetDate=true
                     zmt.targetDate=d
+                    zmt.isExt=true
                     //zoolElementsView.load(jf)
                     //app.uFilePathLoaded='Ahora '+vd+'/'+vm+'/'+va+' '+vh+':'+vmin
                     //s +=app.uFilePathLoaded+'\nTránsitos planetarios global/mundial.\n\n'

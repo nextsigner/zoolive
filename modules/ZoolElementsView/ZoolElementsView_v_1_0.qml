@@ -11,6 +11,14 @@ Rectangle{
     border.color:'yellow'
     color: 'transparent'
     anchors.centerIn: parent
+    Text{
+        text:'<b>Elementos</b>'
+        font.pixelSize: app.fs
+        color: 'white'
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.top: parent.top
+        anchors.topMargin: app.fs
+    }
     ZoolGroupElementItems{id: groupFront;}
     function load(json){
             groupFront.load(json)
