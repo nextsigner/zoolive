@@ -1,1 +1,1 @@
-Se agrega cbArchivosRS a tools
+Se corrigen los retrógrados
