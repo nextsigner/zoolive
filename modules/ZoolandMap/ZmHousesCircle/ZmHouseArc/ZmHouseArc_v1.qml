@@ -33,6 +33,7 @@ Rectangle{
         Rectangle{
             width: (parent.width*0.5)-zoolMap.bodieSize*0.5
             height: parent.height
+            color: 'transparent'
             //color: r.cl
             Rectangle{
                 width: parent.height

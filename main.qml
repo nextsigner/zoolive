@@ -8,7 +8,7 @@ import unik.Unik 1.0
 //import Qt.labs.settings
 import Qt.labs.settings 1.0
 
-import ZoolandMap 3.0
+import ZoolandMap 4.0
 import ZmMoveTime 2.0
 import ZoolElementsView 1.0
 import ZoolandNumCalc 1.0
@@ -755,6 +755,12 @@ ApplicationWindow {
         sequence: 'd'
         onActivated: {
             tools.cbArchivos.currentIndex=2
+        }
+    }
+    Shortcut{
+        sequence: 'a'
+        onActivated: {
+            zoolMap.resetView()
         }
     }
     Shortcut{

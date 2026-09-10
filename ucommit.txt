@@ -1,1 +1,1 @@
-Se agrega gradient a la linea de las casas
+Se agrega shortcut "a" para zoolMap.resetView()

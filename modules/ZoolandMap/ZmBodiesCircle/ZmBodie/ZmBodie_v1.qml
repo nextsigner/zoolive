@@ -168,7 +168,7 @@ Rectangle{
             id: multiEffectBorde
             anchors.fill: img
             source: img
-            visible: !seq1.running && zoolMap.showGlifo
+            visible: !seq1.running && apps.showGlifos
 
             color: "red"
 
