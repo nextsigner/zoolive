@@ -62,6 +62,7 @@ ApplicationWindow {
 
         property bool showAllDegreeData: false
 
+        property bool showGlifos: apps.showGlifos
         property int userGmt: -3
 
         property int aspLineWidth: 2

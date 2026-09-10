@@ -151,7 +151,7 @@ Rectangle{
             //sourceSize: Qt.size(width, height)
 
             // En MultiEffect, la imagen fuente DEBE ser invisible
-            visible: !zoolMap.showGlifo
+            visible: !apps.showGlifos
             Rectangle{
                 width: parent.width+app.fs*0.1
                 height: width
@@ -180,7 +180,7 @@ Rectangle{
 
             color: r.currentColor//zoolMap.bodieColor
 
-            visible: zoolMap.showGlifo
+            visible: apps.showGlifos
         }
 
         Rectangle{

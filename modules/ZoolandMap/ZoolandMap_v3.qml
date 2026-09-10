@@ -239,6 +239,17 @@ Rectangle {
             }
         }
         ZmButton {
+            text: 'G'
+            fs: !app.appRotated?app.fs*0.75:app.fs*0.35
+            width:!app.appRotated?app.fs*1.5:app.fs*0.75
+            isCuad: true
+            opacity: apps.showGlifos?1.0:0.5
+            onClicked: {
+                apps.showGlifos=!apps.showGlifos
+                //zoolMap.showGlifo=!zoolMap.showGlifo
+            }
+        }
+        ZmButton {
             text: '\uf03a'
             fs: !app.appRotated?app.fs*0.75:app.fs*0.35
             width:!app.appRotated?app.fs*1.5:app.fs*0.75

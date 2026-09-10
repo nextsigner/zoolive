@@ -33,7 +33,28 @@ Rectangle{
         Rectangle{
             width: (parent.width*0.5)-zoolMap.bodieSize*0.5
             height: parent.height
-            color: r.cl
+            //color: r.cl
+            Rectangle{
+                width: parent.height
+                height: parent.width
+                rotation: 90
+                anchors.centerIn: parent
+                gradient: Gradient {
+                    GradientStop {
+                        position: 0.15;
+                        color: apps.backgroundColor;
+                    }
+                    GradientStop {
+                        position: 0.65;
+                        color: r.cl;
+                    }
+                    GradientStop {
+                        position: 1.00;
+                        color: r.cl;
+                    }
+                }
+
+            }
             anchors.right: parent.horizontalCenter
             Rectangle{
                 width: zoolMap.bodieSize*1.2
