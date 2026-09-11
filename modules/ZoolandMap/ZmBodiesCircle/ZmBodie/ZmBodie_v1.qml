@@ -66,7 +66,7 @@ Rectangle{
     }
     Rectangle{
         id: xBodie
-        width: zoolMap.bodieSize
+        width: zoolMap.bodieSize*zoolMap.zoom
         height: width
         radius: width*0.5
         color: 'transparent'

@@ -1,1 +1,1 @@
-Se agrega shortcut "a" para zoolMap.resetView()
+Se optimiza zoom en ZoolMap v4

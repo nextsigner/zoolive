@@ -35,6 +35,8 @@ Rectangle{
             height: parent.height
             color: 'transparent'
             //color: r.cl
+            //anchors.horizontalCenter: parent.horizontalCenter
+            anchors.verticalCenter: parent.verticalCenter
             Rectangle{
                 width: parent.height
                 height: parent.width
@@ -58,7 +60,7 @@ Rectangle{
             }
             anchors.right: parent.horizontalCenter
             Rectangle{
-                width: zoolMap.bodieSize*1.2
+                width: zoolMap.bodieSize*1.2*zoolMap.zoom
                 height: width
                 radius: width*0.5
                 color: 'transparent'

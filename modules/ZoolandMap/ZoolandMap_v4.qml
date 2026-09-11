@@ -13,6 +13,7 @@ Rectangle {
     clip: false//!app.appRotated
     anchors.horizontalCenter: parent.horizontalCenter
     property alias zm: zm
+    property alias  zoom: container.zoom
     property alias colTools: colTools
     property alias xToolsTop: xToolsTop
     property int fs: 50
@@ -28,7 +29,7 @@ Rectangle {
     property int posMaxExt: 0
 
     //Houses
-    property int wl: !app.appRotated?app.fs*0.1:2//app.fs*0.02
+    property int wl: app.fs*0.085*r.zoom//!app.appRotated?app.fs*0.1:2//app.fs*0.02
     property color cl: 'white'
 
     //Aspectos
@@ -76,78 +77,87 @@ Rectangle {
     Flickable {
         id: flick
         anchors.fill: parent
-        contentWidth: container.width * container.scale
-        contentHeight: container.height * container.scale
+        clip: true
         boundsBehavior: Flickable.StopAtBounds
-
-        // En Qt 5 lo hacemos interactivo para permitir arrastrar (Pan) con el mouse de la PC
         interactive: true
 
-        ScrollBar.vertical: ScrollBar { active: true }
-        ScrollBar.horizontal: ScrollBar { active: true }
+        // Márgenes para centrar automáticamente cuando el contenido es más pequeño que el viewport
+        leftMargin: Math.max(0, (width - contentWidth) / 2)
+        topMargin: Math.max(0, (height - contentHeight) / 2)
+        rightMargin: leftMargin
+        bottomMargin: topMargin
 
-        // Detectar doble click para resetear la vista desde el fondo del Flickable
-        MouseArea {
-            //anchors.fill: parent
-            width: parent.width*2
-            height: parent.height*2
-            anchors.centerIn: parent
-            propagateComposedEvents: true
-            onDoubleClicked: r.resetView()
-            onPressed: mouse.accepted = false
-            /*Rectangle{
-                color: 'red'
-                anchors.fill: parent
-            }*/
-        }
+        contentWidth: container.width
+        contentHeight: container.height
+        //boundsBehavior: Flickable.StopAtBounds
 
-        // Control de Zoom mediante la rueda del mouse (Reemplazo de WheelHandler en Qt 5)
+        ScrollBar.vertical: ScrollBar { active: true; policy: ScrollBar.AsNeeded }
+        ScrollBar.horizontal: ScrollBar { active: true; policy: ScrollBar.AsNeeded }
+
+        // ===== ZOOM CENTRADO EN EL PUNTERO DEL MOUSE =====
         MouseArea {
             anchors.fill: parent
-            z: -1 // Se mantiene detrás para no interferir con clicks en elementos del mapa
+            z: -1
+            acceptedButtons: Qt.LeftButton
+            propagateComposedEvents: true
 
             onWheel: {
                 r.zoomingOrPaning = true
 
-                let scaleStep = 0.1
-                let delta = wheel.angleDelta.y > 0 ? (1 + scaleStep) : (1 - scaleStep);
-                let newScale = container.scale * delta;
+                var scaleStep = 0.12          // puedes ajustar la sensibilidad
+                var oldZoom = container.zoom
+                var factor = wheel.angleDelta.y > 0 ? (1.0 + scaleStep) : (1.0 - scaleStep)
+                var newZoom = Math.max(0.4, Math.min(12.0, oldZoom * factor))
 
-                if (newScale >= 0.5 && newScale <= 12.0) {
-                    // Guardamos la posición actual del puntero respecto al Flickable
-                    let mouseXInContainer = wheel.x + flick.contentX;
-                    let mouseYInContainer = wheel.y + flick.contentY;
+                if (Math.abs(newZoom - oldZoom) < 0.001)
+                    return
 
-                    container.scale = newScale;
+                // Punto del mouse relativo al Flickable (centro del zoom)
+                var mousePos = Qt.point(wheel.x, wheel.y)
 
-                    // Ajusta el scroll dinámicamente para que el zoom haga foco donde está el puntero del mouse
-                    flick.contentX = mouseXInContainer * delta - wheel.x;
-                    flick.contentY = mouseYInContainer * delta - wheel.y;
-                }
+                // Nuevo tamaño del contenido
+                var newW = r.width * newZoom
+                var newH = r.height * newZoom
+
+                // ¡Esto es lo que mantiene el punto bajo el mouse fijo!
+                flick.resizeContent(newW, newH, mousePos)
+
+                // Actualizamos el factor de zoom
+                container.zoom = newZoom
+
+                // Volvemos a los bounds (importante)
+                //flick.returnToBounds()
             }
         }
 
-        Rectangle {
-            id: container
-            width: r.width
-            height: r.height
-            color: "transparent"
-            x: (parent.width-width)*0.5
-            y: (parent.height-height)*0.5
-            transformOrigin: Item.Center
+        // Doble clic para resetear
+        MouseArea {
+            anchors.fill: parent
+            z: 0
+            acceptedButtons: Qt.LeftButton
+            propagateComposedEvents: true
+            onDoubleClicked: r.resetView()
+            onPressed: mouse.accepted = false
+        }
 
+        // Contenedor del mapa (tamaño real = base × zoom)
+        Item {
+            id: container
+            property real zoom: 0.75          // factor de zoom actual
+
+            width: r.width * zoom
+            height: r.height * zoom
+
+            // El Zm se escala proporcionalmente al contenedor
             Zm {
                 id: zm
+                anchors.centerIn: parent
                 width: parent.width * 0.6
                 height: parent.height * 0.6
-                x: parent.width * 0.2
-                y: parent.height * 0.2
-                wrz: r.wrz
+                wrz: r.wrz*container.zoom
             }
         }
-    }
-
-    Rectangle {
+    }    Rectangle {
         id: xTxtBodieSelected
         width: txtBodieSelected.contentWidth+app.fs*0.25
         height: txtBodieSelected.contentHeight+app.fs*0.25
@@ -284,10 +294,13 @@ Rectangle {
     }
 
     function resetView() {
-        container.scale = 0.75
-        container.x = 0-(container.parent.width-container.width*0.75)*0.5
-        container.y = 0-(container.parent.height-container.height*0.75)*0.5
-        flick.contentX = 0
-        flick.contentY = 0
+        container.zoom = 0.75
+        // resizeContent con el centro de la vista para que quede centrado
+        flick.resizeContent(r.width * 0.75, r.height * 0.75,
+                            Qt.point(flick.width / 2, flick.height / 2))
+        flick.returnToBounds()
     }
+
+
+
 }
