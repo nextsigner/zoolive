@@ -294,9 +294,10 @@ Rectangle {
     }
 
     function resetView() {
-        container.zoom = 0.75
+        let escalaInicial=1.0
+        container.zoom = escalaInicial
         // resizeContent con el centro de la vista para que quede centrado
-        flick.resizeContent(r.width * 0.75, r.height * 0.75,
+        flick.resizeContent(r.width * escalaInicial, r.height * escalaInicial,
                             Qt.point(flick.width / 2, flick.height / 2))
         flick.returnToBounds()
     }
