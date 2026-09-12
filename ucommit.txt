@@ -1,1 +1,1 @@
-Se corrige resetView() en zoolMap
+Edité el README.md
